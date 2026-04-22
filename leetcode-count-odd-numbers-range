@@ -1,0 +1,18 @@
+ /**
+ * LeetCode Problem: Count Odd Numbers in an Interval Range
+ *
+ * Approach:
+ * Instead of iterating through the range, we use a mathematical formula:
+ * count of odds from 1 to x = (x + 1) / 2
+ *
+ * So result = odds(1 to high) - odds(1 to low - 1)
+ *
+ * Time Complexity: O(1)
+ * Space Complexity: O(1)
+ */
+
+class Solution {
+    public int countOdds(int low, int high) {
+        return (high + 1) / 2 - (low) / 2;
+    }
+}
