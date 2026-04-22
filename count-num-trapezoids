@@ -1,0 +1,33 @@
+import java.util.*;
+
+class Solution {
+    public int countTrapezoids(int[][] points) {
+        long MOD = 1_000_000_007;
+
+        // Step 1: count points per y
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int[] p : points) {
+            map.put(p[1], map.getOrDefault(p[1], 0) + 1);
+        }
+
+        // Step 2: compute pairs for each y
+        List<Long> pairs = new ArrayList<>();
+        for (int count : map.values()) {
+            if (count >= 2) {
+                long p = (long) count * (count - 1) / 2;
+                pairs.add(p);
+            }
+        }
+
+        // Step 3: combine pairs
+        long result = 0;
+        long prefixSum = 0;
+
+        for (long p : pairs) {
+            result = (result + p * prefixSum) % MOD;
+            prefixSum = (prefixSum + p) % MOD;
+        }
+
+        return (int) result;
+    }
+}
