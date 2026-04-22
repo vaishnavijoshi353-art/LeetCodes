@@ -1,0 +1,61 @@
+import java.util.*;
+
+class Solution {
+    public int countTrapezoids(int[][] points) {
+        int n = points.length;
+        long MOD = 1_000_000_007;
+
+        Map<String, List<int[]>> map = new HashMap<>();
+
+        // Step 1: store all segments by slope
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+
+                int dx = points[j][0] - points[i][0];
+                int dy = points[j][1] - points[i][1];
+
+                int g = gcd(dx, dy);
+                dx /= g;
+                dy /= g;
+
+                String key = dx + "," + dy;
+
+                map.computeIfAbsent(key, k -> new ArrayList<>())
+                   .add(new int[]{i, j});
+            }
+        }
+
+        long result = 0;
+
+        // Step 2: process each slope group
+        for (List<int[]> segments : map.values()) {
+            int k = segments.size();
+
+            // total pairs
+            long total = (long) k * (k - 1) / 2;
+
+            // subtract overlapping segments
+            Map<Integer, Integer> count = new HashMap<>();
+
+            for (int[] seg : segments) {
+                count.put(seg[0], count.getOrDefault(seg[0], 0) + 1);
+                count.put(seg[1], count.getOrDefault(seg[1], 0) + 1);
+            }
+
+            long overlap = 0;
+            for (int c : count.values()) {
+                if (c > 1) {
+                    overlap += (long) c * (c - 1) / 2;
+                }
+            }
+
+            result = (result + (total - overlap)) % MOD;
+        }
+
+        return (int) result;
+    }
+
+    private int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+}
